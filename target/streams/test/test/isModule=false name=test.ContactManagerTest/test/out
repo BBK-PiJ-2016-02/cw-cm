@@ -1,0 +1,7 @@
+[0m[[31merror[0m] [0mTest test.[33mContactManagerTest[0m.[31mtestAddFutureDateReturnsId[0m failed: java.lang.[31mIllegalArgumentException[0m: null[0m
+[0m[[31merror[0m] [0m    at impl.ContactManagerImpl.getFutureMeetingList(ContactManagerImpl.java:203)[0m
+[0m[[31merror[0m] [0m    at test.ContactManagerTest.testAddFutureDateReturnsId([35mContactManagerTest.java[0m:[33m199[0m)[0m
+[0m[[31merror[0m] [0m    ...[0m
+[0m[[31merror[0m] [0mTest test.[33mContactManagerTest[0m.[31mtestConstructorLoadsFromFile[0m failed: expected:<3> but was:<0>[0m
+[0m[[31merror[0m] [0mTest test.[33mContactManagerTest[0m.[31mtestAddMeetingNotesAddNotesToPastMeeting[0m failed: null[0m
+[0m[[31merror[0m] [0mTest test.[33mContactManagerTest[0m.[31mtestAddMeetingNotesConvertsFutureMeetingToPastMeetingAndAddsNotes[0m failed: null[0m

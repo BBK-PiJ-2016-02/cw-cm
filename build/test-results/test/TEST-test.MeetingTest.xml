@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="test.MeetingTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2017-02-03T17:05:40" hostname="phoenix" time="0.002">
+  <properties/>
+  <testcase name="testConstructorSets" classname="test.MeetingTest" time="0.001"/>
+  <testcase name="testContactsImmutableFromOutsideObject" classname="test.MeetingTest" time="0.0"/>
+  <testcase name="testUniqueIds" classname="test.MeetingTest" time="0.0"/>
+  <testcase name="testImmutableDate" classname="test.MeetingTest" time="0.0"/>
+  <testcase name="testConstructor" classname="test.MeetingTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
