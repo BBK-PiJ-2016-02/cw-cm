@@ -1,13 +1,17 @@
 apply plugin: 'java'
 apply plugin: 'jacoco'  
+apply plugin: 'findbugs'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+findbugs.toolVersion = '3.0.1'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    compile 'com.google.code.findbugs:annotations:3.0.1'
     testCompile 'junit:junit:4.12'
 }   
