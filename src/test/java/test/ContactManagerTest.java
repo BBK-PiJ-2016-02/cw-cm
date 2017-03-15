@@ -2,11 +2,10 @@ package test;
 
 import static org.junit.Assert.assertEquals;
 
-import spec.ContactManager;
 import impl.ContactManagerImpl;
-
 import java.util.Set;
 import org.junit.Test;
+import spec.ContactManager;
 
 public class ContactManagerTest {
 
