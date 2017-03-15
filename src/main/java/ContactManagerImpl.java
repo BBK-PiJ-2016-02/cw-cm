@@ -62,15 +62,11 @@ public class ContactManagerImpl implements ContactManager {
   }
 
   public Set<Contact> getContacts(String name) {
-    return null;
+    return contacts;
   }
 
   public Set<Contact> getContacts(int... ids) {
     return null;
-  }
-
-  public Set<Contact> getAllContacts() {
-    return contacts;
   }
 
   public void flush() {

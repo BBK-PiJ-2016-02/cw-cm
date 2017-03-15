@@ -2,6 +2,7 @@ package test;
 
 import static org.junit.Assert.assertEquals;
 
+import spec.ContactManager;
 import impl.ContactManagerImpl;
 
 import java.util.Set;
@@ -11,17 +12,17 @@ public class ContactManagerTest {
 
   @Test
   public void testAddingContact() {
-    ContactManagerImpl contactManager = new ContactManagerImpl();
-    assertEquals(0, contactManager.getAllContacts().size());
+    ContactManager contactManager = new ContactManagerImpl();
+    assertEquals(0, contactManager.getContacts("").size());
 
     int contactId1 = contactManager.addNewContact("John", "A note about John");
 
-    assertEquals(1, contactManager.getAllContacts().size());
+    assertEquals(1, contactManager.getContacts("").size());
     assertEquals(1, contactId1);
 
     int contactId2 = contactManager.addNewContact("Sarah", "A note about Sarah");
 
-    assertEquals(2, contactManager.getAllContacts().size());
+    assertEquals(2, contactManager.getContacts("").size());
     assertEquals(2, contactId2);
   }
 
