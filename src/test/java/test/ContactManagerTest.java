@@ -14,9 +14,14 @@ public class ContactManagerTest {
     ContactManagerImpl contactManager = new ContactManagerImpl();
     assertEquals(0, contactManager.getAllContacts().size());
 
-    int contactId = contactManager.addNewContact("John", "A note about John");
+    int contactId1 = contactManager.addNewContact("John", "A note about John");
 
     assertEquals(1, contactManager.getAllContacts().size());
-    assertEquals(1, contactId);
+    assertEquals(1, contactId1);
+
+    int contactId2 = contactManager.addNewContact("Sarah", "A note about Sarah");
+
+    assertEquals(2, contactManager.getAllContacts().size());
+    assertEquals(2, contactId2);
   }
 }
