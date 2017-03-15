@@ -12,6 +12,7 @@ import spec.*;
 public class ContactManagerImpl implements ContactManager {
 
   private Set<Contact> contacts;
+  private int nextContactId = 1;
 
   public ContactManagerImpl() {
     contacts = new HashSet<>();
@@ -54,8 +55,9 @@ public class ContactManagerImpl implements ContactManager {
   }
 
   public int addNewContact(String name, String notes) {
-    Contact contact = new ContactImpl(1, name, notes);
+    Contact contact = new ContactImpl(nextContactId++, name, notes);
     contacts.add(contact);
+
     return contact.getId();
   }
 
