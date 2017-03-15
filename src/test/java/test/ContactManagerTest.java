@@ -24,4 +24,22 @@ public class ContactManagerTest {
     assertEquals(2, contactManager.getAllContacts().size());
     assertEquals(2, contactId2);
   }
+
+  @Test
+  public void testRetrievingContactById() {
+    ContactManagerImpl contactManager = new ContactManagerImpl();
+    int contactId = contactManager.addNewContact("John", "A note about John");
+
+    Set<Contact> contactById = contactManager.getContacts(contactId);
+    assertEquals("John", ((Contact) contactById.toArray()[0]).getName());
+  }
+
+  @Test
+  public void testRetrievingContactByName() {
+    ContactManagerImpl contactManager = new ContactManagerImpl();
+    int contactId = contactManager.addNewContact("John", "A note about John");
+
+    Set<Contact> contactByName = contactManager.getContacts("John");
+    assertEquals("John", ((Contact) contactByName.toArray()[0]).getName());
+  }
 }
