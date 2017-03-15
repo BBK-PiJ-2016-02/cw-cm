@@ -19,6 +19,10 @@ test {
     }
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.4.1'
+}
+
 dependencies {
     compile 'com.google.code.findbugs:annotations:3.0.1'
     testCompile 'junit:junit:4.12'
