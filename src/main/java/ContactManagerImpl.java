@@ -62,11 +62,33 @@ public class ContactManagerImpl implements ContactManager {
   }
 
   public Set<Contact> getContacts(String name) {
+    if(name.equals("")) {
+      return this.contacts;
+    }
+
+    Set<Contact> contacts = new HashSet<>();
+
+    for(Contact contact : this.contacts) {
+      if(contact.getName().equals(name)) {
+        contacts.add(contact);
+      }
+    }
+
     return contacts;
   }
 
   public Set<Contact> getContacts(int... ids) {
-    return null;
+    Set<Contact> contacts = new HashSet<>();
+
+    for(Contact contact : this.contacts) {
+      for(int id : ids) {
+        if(contact.getId() == id) {
+          contacts.add(contact);
+        }
+      }
+    }
+
+    return contacts;
   }
 
   public void flush() {
