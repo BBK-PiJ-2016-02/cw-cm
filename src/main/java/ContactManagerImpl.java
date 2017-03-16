@@ -3,11 +3,15 @@ package impl;
 import impl.ContactImpl;
 
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 
-import spec.*;
+import spec.Contact;
+import spec.ContactManager;
+import spec.FutureMeeting;
+import spec.Meeting;
+import spec.PastMeeting;
 
 public class ContactManagerImpl implements ContactManager {
 
@@ -62,14 +66,14 @@ public class ContactManagerImpl implements ContactManager {
   }
 
   public Set<Contact> getContacts(String name) {
-    if(name.equals("")) {
+    if (name.equals("")) {
       return this.contacts;
     }
 
     Set<Contact> contacts = new HashSet<>();
 
-    for(Contact contact : this.contacts) {
-      if(contact.getName().equals(name)) {
+    for (Contact contact : this.contacts) {
+      if (contact.getName().equals(name)) {
         contacts.add(contact);
       }
     }
@@ -80,9 +84,9 @@ public class ContactManagerImpl implements ContactManager {
   public Set<Contact> getContacts(int... ids) {
     Set<Contact> contacts = new HashSet<>();
 
-    for(Contact contact : this.contacts) {
-      for(int id : ids) {
-        if(contact.getId() == id) {
+    for (Contact contact : this.contacts) {
+      for (int id : ids) {
+        if (contact.getId() == id) {
           contacts.add(contact);
         }
       }

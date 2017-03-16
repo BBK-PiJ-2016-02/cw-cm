@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import impl.ContactManagerImpl;
 import java.lang.reflect.Array;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import org.junit.Test;
 import spec.Contact;
@@ -58,10 +58,8 @@ public class ContactManagerTest {
     String[] names = new String[] { "Jerry", "Kelly", "Thomas", "Laura" };
     List<Integer> contactIds = new ArrayList<Integer>();
 
-    for(int i = 0; i < names.length; i++) {
-      contactIds.add(
-        contactManager.addNewContact(names[i], "A note about " + names[i])
-      );
+    for (int i = 0; i < names.length; i++) {
+      contactIds.add(contactManager.addNewContact(names[i], "A note about " + names[i]));
     }
 
     return contactIds;
