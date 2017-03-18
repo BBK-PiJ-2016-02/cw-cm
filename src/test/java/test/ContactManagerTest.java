@@ -3,6 +3,7 @@ package test;
 import static org.junit.Assert.assertEquals;
 
 import impl.ContactManagerImpl;
+import java.lang.IllegalArgumentException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,19 @@ public class ContactManagerTest {
 
     assertEquals("John", contact1.getName());
     assertEquals("Hannah", contact2.getName());
+  }
+
+  @Test
+  public void testRetrievingNonExistentContactsById() {
+    ContactManager contactManager = new ContactManagerImpl();
+    int contactId1 = contactManager.addNewContact("John", "A note about John");
+
+    try {
+        Set<Contact> contactsById = contactManager.getContacts(contactId1, 999, 1230);
+    } catch(IllegalArgumentException e) {
+        assertEquals(e.getMessage(), "Attempting to retrieve non-existent contact(s)");
+    }
+
   }
 
   @Test

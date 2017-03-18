@@ -84,12 +84,17 @@ public class ContactManagerImpl implements ContactManager {
   public Set<Contact> getContacts(int... ids) {
     Set<Contact> contacts = new HashSet<>();
 
-    for (Contact contact : this.contacts) {
-      for (int id : ids) {
+    for (int id : ids) {
+      for (Contact contact : this.contacts) {
         if (contact.getId() == id) {
           contacts.add(contact);
         }
       }
+    }
+
+    if(ids.length != contacts.size()) {
+        // If any of the provided IDs does not correspond to a real contact
+        throw new IllegalArgumentException("Attempting to retrieve non-existent contact(s)");
     }
 
     return contacts;
