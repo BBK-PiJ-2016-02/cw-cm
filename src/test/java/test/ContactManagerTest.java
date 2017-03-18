@@ -67,9 +67,9 @@ public class ContactManagerTest {
     int contactId1 = contactManager.addNewContact("John", "A note about John");
 
     try {
-        Set<Contact> contactsById = contactManager.getContacts(contactId1, 999, 1230);
-    } catch(IllegalArgumentException e) {
-        assertEquals(e.getMessage(), "Attempting to retrieve non-existent contact(s)");
+      contactManager.getContacts(contactId1, 999, 1230);
+    } catch (IllegalArgumentException e) {
+      assertEquals(e.getMessage(), "Attempting to retrieve non-existent contact(s)");
     }
 
   }
