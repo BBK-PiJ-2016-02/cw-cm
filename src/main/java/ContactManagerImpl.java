@@ -3,7 +3,7 @@ package impl;
 import impl.ContactImpl;
 
 import java.util.Calendar;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,7 +19,7 @@ public class ContactManagerImpl implements ContactManager {
   private int nextContactId = 1;
 
   public ContactManagerImpl() {
-    contacts = new HashSet<>();
+    contacts = new LinkedHashSet<>();
   }
 
   public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
@@ -70,7 +70,7 @@ public class ContactManagerImpl implements ContactManager {
       return this.contacts;
     }
 
-    Set<Contact> contacts = new HashSet<>();
+    Set<Contact> contacts = new LinkedHashSet<>();
 
     for (Contact contact : this.contacts) {
       if (contact.getName().equals(name)) {
@@ -82,7 +82,7 @@ public class ContactManagerImpl implements ContactManager {
   }
 
   public Set<Contact> getContacts(int... ids) {
-    Set<Contact> contacts = new HashSet<>();
+    Set<Contact> contacts = new LinkedHashSet<>();
 
     for (int id : ids) {
       for (Contact contact : this.contacts) {

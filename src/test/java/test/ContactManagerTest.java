@@ -55,8 +55,6 @@ public class ContactManagerTest {
     Contact contact1 = (Contact) Array.get(contactsById.toArray(), 0);
     Contact contact2 = (Contact) Array.get(contactsById.toArray(), 1);
 
-    System.out.println(contact1.getName() + ", " + contact2.getName());
-
     assertEquals("John", contact1.getName());
     assertEquals("Hannah", contact2.getName());
   }
