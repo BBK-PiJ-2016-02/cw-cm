@@ -1,12 +1,15 @@
 package test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import impl.ContactManagerImpl;
 import java.lang.IllegalArgumentException;
 import java.lang.reflect.Array;
+import java.lang.Thread;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -16,6 +19,7 @@ import org.junit.Test;
 import spec.Contact;
 import spec.ContactManager;
 import spec.FutureMeeting;
+import spec.PastMeeting;
 import spec.Meeting;
 
 public class ContactManagerTest {
@@ -145,11 +149,40 @@ public class ContactManagerTest {
     }
   }
 
+  @Test
   public void testRetrievingNonExistentMeeting() {
     ContactManager contactManager = new ContactManagerImpl();
     assertNull(contactManager.getMeeting(9999));
     assertNull(contactManager.getPastMeeting(9999));
     assertNull(contactManager.getFutureMeeting(9999));
+  }
+
+  @Test
+  public void testConversionOfFutureMeetingToPast() {
+    int timeInFutureMs = 500;
+
+    ContactManager contactManager = new ContactManagerImpl();
+    int contactId = contactManager.addNewContact("John", "A note about John");
+    Set<Contact> contacts = contactManager.getContacts(contactId);
+    Calendar date = Calendar.getInstance();
+    date.setTimeInMillis(date.getTimeInMillis() + timeInFutureMs);
+    int meetingId = contactManager.addFutureMeeting(contacts, date);
+
+    Meeting meeting = contactManager.getMeeting(meetingId);
+    assertTrue(meeting instanceof FutureMeeting);
+    assertFalse(meeting instanceof PastMeeting);
+
+    try {
+      /*
+        Not ideal (we should inject a mock date object into the manager)
+        However it fits our needs for the time being,
+       */
+      Thread.sleep(timeInFutureMs + 100);
+    } catch (java.lang.InterruptedException ie) { }
+
+    meeting = contactManager.getMeeting(meetingId);
+    assertFalse(meeting instanceof FutureMeeting);
+    assertTrue(meeting instanceof PastMeeting);
   }
 
   private List<Integer> generateTestContacts(ContactManager contactManager) {
