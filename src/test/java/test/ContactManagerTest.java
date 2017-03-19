@@ -211,11 +211,10 @@ public class ContactManagerTest {
     Contact contact = (Contact) Array.get(contacts.toArray(), 0);
 
     List<Meeting> meetings = contactManager.getFutureMeetingList(contact);
-    assertNull(meetings);
+    assertEquals(0, meetings.size());
 
     contactManager.addFutureMeeting(contacts, dateFuture);
     meetings = contactManager.getFutureMeetingList(contact);
-    assertNotNull(meetings);
     assertEquals(1, meetings.size());
 
     Contact outsideContact = new ContactImpl(123, "Nate", "");
@@ -234,7 +233,7 @@ public class ContactManagerTest {
     Contact contact = (Contact) Array.get(contacts.toArray(), 0);
 
     List<Meeting> meetings = contactManager.getMeetingListOn(dateFuture);
-    assertNull(meetings);
+    assertEquals(0, meetings.size());
 
     contactManager.addFutureMeeting(contacts, dateFuture);
     meetings = contactManager.getMeetingListOn(dateFuture);
@@ -248,7 +247,7 @@ public class ContactManagerTest {
     Contact contact = (Contact) Array.get(contacts.toArray(), 0);
 
     List<PastMeeting> meetings = contactManager.getPastMeetingListFor(contact);
-    assertNull(meetings);
+    assertEquals(0, meetings.size());
 
     contactManager.addNewPastMeeting(contacts, datePast, "");
     meetings = contactManager.getPastMeetingListFor(contact);

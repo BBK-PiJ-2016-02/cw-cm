@@ -5,6 +5,7 @@ import impl.MeetingImpl;
 import java.lang.IllegalArgumentException;
 import java.lang.IllegalStateException;
 import java.lang.NullPointerException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -68,7 +69,14 @@ public class ContactManagerImpl implements ContactManager {
   }
 
   public List<Meeting> getFutureMeetingList(Contact contact) {
-    return null;
+    List<Meeting> meetings = new ArrayList<>();
+    for (Meeting meeting : this.meetings.values()) {
+      Set<Contact> contacts = meeting.getContacts();
+      if (contacts.contains(contact)) {
+        meetings.add(meeting);
+      }
+    }
+    return meetings;
   }
 
   public List<Meeting> getMeetingListOn(Calendar date) {
