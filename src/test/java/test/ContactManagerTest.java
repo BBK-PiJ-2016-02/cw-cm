@@ -1,17 +1,21 @@
 package test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import impl.ContactManagerImpl;
 import java.lang.IllegalArgumentException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 import org.junit.Test;
 import spec.Contact;
 import spec.ContactManager;
+import spec.Meeting;
 
 public class ContactManagerTest {
 
@@ -84,6 +88,20 @@ public class ContactManagerTest {
     Contact contact = (Contact) Array.get(contactsByName.toArray(), 0);
 
     assertEquals("John", contact.getName());
+  }
+
+  @Test
+  public void testRetrievingMeetingById() {
+    ContactManager contactManager = new ContactManagerImpl();
+    int contactId = contactManager.addNewContact("John", "A note about John");
+    Set<Contact> contacts = contactManager.getContacts(contactId);
+    Calendar calendar = new GregorianCalendar(2020, 0, 1, 9, 00);
+
+    int meetingId = contactManager.addFutureMeeting(contacts, calendar);
+    Meeting meeting = contactManager.getMeeting(meetingId);
+    assertEquals(meetingId, meeting.getId());
+
+    assertNull(contactManager.getMeeting(10));
   }
 
   private List<Integer> generateTestContacts(ContactManager contactManager) {
