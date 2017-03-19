@@ -17,10 +17,13 @@ import spec.PastMeeting;
 public class ContactManagerImpl implements ContactManager {
 
   private Set<Contact> contacts;
+  private Set<Contact> meetings;
   private int nextContactId = 1;
+  private int nextMeetingId = 1;
 
   public ContactManagerImpl() {
     contacts = new LinkedHashSet<>();
+    meetings = new LinkedHashSet<>();
   }
 
   public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
