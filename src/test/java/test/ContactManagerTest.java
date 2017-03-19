@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
+import org.junit.Before;
 import org.junit.Test;
 import spec.Contact;
 import spec.ContactManager;
@@ -24,18 +25,30 @@ import spec.PastMeeting;
 
 public class ContactManagerTest {
 
+  private ContactManager contactManager;
+  private Calendar dateNow;
+  private Calendar datePast;
+  private Calendar dateFuture;
+
+  @Before
+  public void setUp() {
+    contactManager = new ContactManagerImpl();
+    dateNow = Calendar.getInstance();
+    datePast = new GregorianCalendar(1990, 0, 1, 9, 00);
+    dateFuture = new GregorianCalendar(2050, 0, 1, 9, 00);
+  }
+
   @Test
   public void testAddingSingleContact() {
-    ContactManager contactManager = new ContactManagerImpl();
-    generateTestContacts(contactManager);
+    generateTestContacts();
     int initContactCount = contactManager.getContacts("").size();
 
-    int contactId1 = contactManager.addNewContact("John", "A note about John");
+    int contactId1 = createTestContact("John");
 
     assertEquals(initContactCount + 1, contactManager.getContacts("").size());
     assertEquals(initContactCount + 1, contactId1);
 
-    int contactId2 = contactManager.addNewContact("Sarah", "A note about Sarah");
+    int contactId2 = createTestContact("Sarah");
 
     assertEquals(initContactCount + 2, contactManager.getContacts("").size());
     assertEquals(initContactCount + 2, contactId2);
@@ -43,10 +56,9 @@ public class ContactManagerTest {
 
   @Test
   public void testRetrievingSingleContactsById() {
-    ContactManager contactManager = new ContactManagerImpl();
-    generateTestContacts(contactManager);
+    generateTestContacts();
 
-    int contactId = contactManager.addNewContact("John", "A note about John");
+    int contactId = createTestContact("John");
     Set<Contact> contactsById = contactManager.getContacts(contactId);
     Contact contact = (Contact) Array.get(contactsById.toArray(), 0);
 
@@ -55,11 +67,10 @@ public class ContactManagerTest {
 
   @Test
   public void testRetrievingMultipleContactsById() {
-    ContactManager contactManager = new ContactManagerImpl();
-    generateTestContacts(contactManager);
+    generateTestContacts();
 
-    int contactId1 = contactManager.addNewContact("John", "A note about John");
-    int contactId2 = contactManager.addNewContact("Hannah", "A note about Hannah");
+    int contactId1 = createTestContact("John");
+    int contactId2 = createTestContact("Hannah");
     Set<Contact> contactsById = contactManager.getContacts(contactId1, contactId2);
 
     Contact contact1 = (Contact) Array.get(contactsById.toArray(), 0);
@@ -71,8 +82,7 @@ public class ContactManagerTest {
 
   @Test
   public void testRetrievingNonExistentContactsById() {
-    ContactManager contactManager = new ContactManagerImpl();
-    int contactId1 = contactManager.addNewContact("John", "A note about John");
+    int contactId1 = createTestContact("John");
 
     try {
       contactManager.getContacts(contactId1, 999, 1230);
@@ -85,10 +95,9 @@ public class ContactManagerTest {
 
   @Test
   public void testRetrievingSingleContactsByName() {
-    ContactManager contactManager = new ContactManagerImpl();
-    generateTestContacts(contactManager);
+    generateTestContacts();
 
-    contactManager.addNewContact("John", "A note about John");
+    createTestContact("John");
     Set<Contact> contactsByName = contactManager.getContacts("John");
     Contact contact = (Contact) Array.get(contactsByName.toArray(), 0);
 
@@ -97,8 +106,7 @@ public class ContactManagerTest {
 
   @Test
   public void testRetrievingMeetingById() {
-    ContactManager contactManager = new ContactManagerImpl();
-    int contactId = contactManager.addNewContact("John", "A note about John");
+    int contactId = createTestContact("John");
     Set<Contact> contacts = contactManager.getContacts(contactId);
     Calendar date = new GregorianCalendar(2050, 0, 1, 9, 00);
 
@@ -111,18 +119,15 @@ public class ContactManagerTest {
 
   @Test
   public void testAddingFutureMeeting() {
-    ContactManager contactManager = new ContactManagerImpl();
-    int contactId = contactManager.addNewContact("John", "A note about John");
+    int contactId = createTestContact("John");
     Set<Contact> contacts = contactManager.getContacts(contactId);
-    Calendar futureDate = new GregorianCalendar(2050, 0, 1, 9, 00);
 
-    int meetingId = contactManager.addFutureMeeting(contacts, futureDate);
+    int meetingId = contactManager.addFutureMeeting(contacts, dateFuture);
     Meeting meeting = contactManager.getFutureMeeting(meetingId);
     assertEquals(meetingId, meeting.getId());
 
-    Calendar pastDate = new GregorianCalendar(1990, 0, 1, 9, 00);
     try {
-      contactManager.addFutureMeeting(contacts, pastDate);
+      contactManager.addFutureMeeting(contacts, datePast);
       fail();
     } catch (IllegalArgumentException e) {
       assertEquals(e.getMessage(), "Meeting must take place in the future");
@@ -131,18 +136,15 @@ public class ContactManagerTest {
 
   @Test
   public void testAddingPastMeeting() {
-    ContactManager contactManager = new ContactManagerImpl();
-    int contactId = contactManager.addNewContact("John", "A note about John");
+    int contactId = createTestContact("John");
     Set<Contact> contacts = contactManager.getContacts(contactId);
-    Calendar pastDate = new GregorianCalendar(1990, 0, 1, 9, 00);
 
-    int meetingId = contactManager.addNewPastMeeting(contacts, pastDate, "");
+    int meetingId = contactManager.addNewPastMeeting(contacts, datePast, "");
     Meeting meeting = contactManager.getPastMeeting(meetingId);
     assertEquals(meetingId, meeting.getId());
 
-    Calendar futureDate = new GregorianCalendar(2050, 0, 1, 9, 00);
     try {
-      contactManager.addNewPastMeeting(contacts, futureDate, "");
+      contactManager.addNewPastMeeting(contacts, dateFuture, "");
       fail();
     } catch (IllegalArgumentException e) {
       assertEquals(e.getMessage(), "Meeting must take place in the past");
@@ -151,7 +153,6 @@ public class ContactManagerTest {
 
   @Test
   public void testRetrievingNonExistentMeeting() {
-    ContactManager contactManager = new ContactManagerImpl();
     assertNull(contactManager.getMeeting(9999));
     assertNull(contactManager.getPastMeeting(9999));
     assertNull(contactManager.getFutureMeeting(9999));
@@ -161,12 +162,10 @@ public class ContactManagerTest {
   public void testConversionOfFutureMeetingToPast() {
     int timeInFutureMs = 500;
 
-    ContactManager contactManager = new ContactManagerImpl();
-    int contactId = contactManager.addNewContact("John", "A note about John");
+    int contactId = createTestContact("John");
     Set<Contact> contacts = contactManager.getContacts(contactId);
-    Calendar date = Calendar.getInstance();
-    date.setTimeInMillis(date.getTimeInMillis() + timeInFutureMs);
-    int meetingId = contactManager.addFutureMeeting(contacts, date);
+    dateNow.setTimeInMillis(dateNow.getTimeInMillis() + timeInFutureMs);
+    int meetingId = contactManager.addFutureMeeting(contacts, dateNow);
 
     Meeting meeting = contactManager.getMeeting(meetingId);
     assertTrue(meeting instanceof FutureMeeting);
@@ -189,12 +188,9 @@ public class ContactManagerTest {
 
   @Test
   public void testAddingNotesToExistingPastAppointment() {
-    ContactManager contactManager = new ContactManagerImpl();
-    int contactId = contactManager.addNewContact("John", "A note about John");
+    int contactId = createTestContact("John");
     Set<Contact> contacts = contactManager.getContacts(contactId);
-    Calendar date = Calendar.getInstance();
-    date.setTimeInMillis(date.getTimeInMillis() - 1000);
-    int meetingId = contactManager.addNewPastMeeting(contacts, date, "");
+    int meetingId = contactManager.addNewPastMeeting(contacts, datePast, "");
 
     PastMeeting meeting = contactManager.getPastMeeting(meetingId);
     assertEquals("", meeting.getNotes());
@@ -206,12 +202,16 @@ public class ContactManagerTest {
     assertEquals("Productive meeting, Should arrange follow up discussion", meeting.getNotes());
   }
 
-  private List<Integer> generateTestContacts(ContactManager contactManager) {
+  private int createTestContact(String name) {
+    return contactManager.addNewContact(name, "A note about " + name);
+  }
+
+  private List<Integer> generateTestContacts() {
     String[] names = new String[] { "Jerry", "Kelly", "Thomas", "Laura" };
     List<Integer> contactIds = new ArrayList<Integer>();
 
     for (int i = 0; i < names.length; i++) {
-      contactIds.add(contactManager.addNewContact(names[i], "A note about " + names[i]));
+      contactIds.add(createTestContact(names[i]));
     }
 
     return contactIds;
