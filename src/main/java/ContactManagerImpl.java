@@ -1,7 +1,9 @@
 package impl;
 
-import impl.ContactImpl;
+import impl.DataStore;
 import impl.MeetingImpl;
+import impl.MeetingImpl;
+import java.io.IOException;
 import java.lang.IllegalArgumentException;
 import java.lang.IllegalStateException;
 import java.lang.NullPointerException;
@@ -22,12 +24,22 @@ public class ContactManagerImpl implements ContactManager {
 
   private HashMap<Integer, Contact> contacts;
   private HashMap<Integer, Meeting> meetings;
-  private int nextContactId = 1;
-  private int nextMeetingId = 1;
+  private int nextContactId;
+  private int nextMeetingId;
+  private DataStore data;
 
   public ContactManagerImpl() {
-    contacts = new HashMap<>();
-    meetings = new HashMap<>();
+    data = new DataStore();
+    try {
+      data.fetch();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    contacts = data.getContacts();
+    meetings = data.getMeetings();
+    nextContactId = data.getNextContactId();
+    nextMeetingId = data.getNextMeetingId();
   }
 
   public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
@@ -175,7 +187,20 @@ public class ContactManagerImpl implements ContactManager {
   }
 
   public void flush() {
+    this.commit();
+  }
 
+  private void commit() {
+    data.setContacts(this.contacts);
+    data.setMeetings(this.meetings);
+    data.setNextContactId(this.nextContactId);
+    data.setNextMeetingId(this.nextMeetingId);
+
+    try {
+      this.data.commit();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   /**
