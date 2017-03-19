@@ -21,7 +21,7 @@ public class ContactTest {
   @Test
   public void testInvalidContactId() {
     try {
-      Contact contact = new ContactImpl(0, "John");
+      new ContactImpl(0, "John");
       fail();
     } catch (IllegalArgumentException e) {
       assertEquals(e.getMessage(), "ID must be a positive non-zero integer.");

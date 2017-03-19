@@ -8,8 +8,8 @@ import static org.junit.Assert.fail;
 
 import impl.ContactManagerImpl;
 import java.lang.IllegalArgumentException;
-import java.lang.reflect.Array;
 import java.lang.Thread;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -19,8 +19,8 @@ import org.junit.Test;
 import spec.Contact;
 import spec.ContactManager;
 import spec.FutureMeeting;
-import spec.PastMeeting;
 import spec.Meeting;
+import spec.PastMeeting;
 
 public class ContactManagerTest {
 
@@ -178,7 +178,9 @@ public class ContactManagerTest {
         However it fits our needs for the time being,
        */
       Thread.sleep(timeInFutureMs + 100);
-    } catch (java.lang.InterruptedException ie) { }
+    } catch (java.lang.InterruptedException ie) {
+      Thread.currentThread().interrupt();
+    }
 
     meeting = contactManager.getMeeting(meetingId);
     assertFalse(meeting instanceof FutureMeeting);
