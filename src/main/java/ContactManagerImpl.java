@@ -4,10 +4,10 @@ import impl.ContactImpl;
 
 import java.lang.IllegalArgumentException;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
 import spec.Contact;
 import spec.ContactManager;
 import spec.FutureMeeting;
@@ -16,14 +16,14 @@ import spec.PastMeeting;
 
 public class ContactManagerImpl implements ContactManager {
 
-  private Set<Contact> contacts;
-  private Set<Contact> meetings;
+  private HashMap<Integer, Contact> contacts;
+  private HashMap<Integer, Meeting> meetings;
   private int nextContactId = 1;
   private int nextMeetingId = 1;
 
   public ContactManagerImpl() {
-    contacts = new LinkedHashSet<>();
-    meetings = new LinkedHashSet<>();
+    contacts = new HashMap<>();
+    meetings = new HashMap<>();
   }
 
   public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
@@ -39,7 +39,7 @@ public class ContactManagerImpl implements ContactManager {
   }
 
   public Meeting getMeeting(int id) {
-    return null;
+    return this.meetings.get(id);
   }
 
   public List<Meeting> getFutureMeetingList(Contact contact) {
@@ -63,21 +63,19 @@ public class ContactManagerImpl implements ContactManager {
   }
 
   public int addNewContact(String name, String notes) {
-    Contact contact = new ContactImpl(nextContactId++, name, notes);
-    contacts.add(contact);
+    Contact contact = new ContactImpl(nextContactId, name, notes);
+    contacts.put(nextContactId, contact);
+    nextContactId++;
 
     return contact.getId();
   }
 
   public Set<Contact> getContacts(String name) {
-    if (name.equals("")) {
-      return this.contacts;
-    }
-
     Set<Contact> contacts = new LinkedHashSet<>();
 
-    for (Contact contact : this.contacts) {
-      if (contact.getName().equals(name)) {
+    boolean returnAll = (name.equals(""));
+    for (Contact contact : this.contacts.values()) {
+      if (returnAll || contact.getName().equals(name)) {
         contacts.add(contact);
       }
     }
@@ -89,16 +87,7 @@ public class ContactManagerImpl implements ContactManager {
     Set<Contact> contacts = new LinkedHashSet<>();
 
     for (int id : ids) {
-      for (Contact contact : this.contacts) {
-        if (contact.getId() == id) {
-          contacts.add(contact);
-        }
-      }
-    }
-
-    if(ids.length != contacts.size()) {
-        // If any of the provided IDs does not correspond to a real contact
-        throw new IllegalArgumentException("Attempting to retrieve non-existent contact(s)");
+      contacts.add(this.retrieveContact(id));
     }
 
     return contacts;
@@ -106,6 +95,20 @@ public class ContactManagerImpl implements ContactManager {
 
   public void flush() {
 
+  }
+
+  /**
+   * Retrieve a single contact by ID
+   *
+   * @param   id   corresponding contact to retrieve
+   * @throws  IllegalArgumentException  if attempting to retrieve non-existent contact ID
+   */
+  private Contact retrieveContact(int id) {
+    Contact contact = this.contacts.get(id);
+    if(contact == null) {
+      throw new IllegalArgumentException("Attempting to retrieve non-existent contact");
+    }
+    return contact;
   }
 
 }

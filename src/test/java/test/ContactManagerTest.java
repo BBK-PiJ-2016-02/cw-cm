@@ -73,7 +73,7 @@ public class ContactManagerTest {
       contactManager.getContacts(contactId1, 999, 1230);
       fail();
     } catch (IllegalArgumentException e) {
-      assertEquals(e.getMessage(), "Attempting to retrieve non-existent contact(s)");
+      assertEquals(e.getMessage(), "Attempting to retrieve non-existent contact");
     }
 
   }
