@@ -60,6 +60,7 @@ public class ContactManagerImpl implements ContactManager {
 
     if(meeting instanceof FutureMeeting && this.isMeetingPast(meeting)) {
       meeting = this.convertMeetingToPast(meeting);
+      meetings.put(meeting.getId(), meeting);
     }
 
     return meeting;
@@ -142,11 +143,21 @@ public class ContactManagerImpl implements ContactManager {
     return contact;
   }
 
+  /**
+   * Create a past meeting instance from an existing meeting.
+   *
+   * @param  meeting Meeting instance to be used a source date
+   */
   private PastMeeting convertMeetingToPast(Meeting meeting) {
-    /*
-      TO DO: convert meeting instance to PastMeeting
-     */
-    return (PastMeeting) meeting;
+
+    PastMeeting pastMeeting = new PastMeetingImpl(
+      meeting.getId(),
+      meeting.getContacts(),
+      meeting.getDate(),
+      ""
+    );
+
+    return pastMeeting;
   }
 
   /**
