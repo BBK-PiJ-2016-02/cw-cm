@@ -56,7 +56,13 @@ public class ContactManagerImpl implements ContactManager {
   }
 
   public Meeting getMeeting(int id) {
-    return this.meetings.get(id);
+    Meeting meeting = this.meetings.get(id);
+
+    if(meeting instanceof FutureMeeting && this.isMeetingPast(meeting)) {
+      meeting = this.convertMeetingToPast(meeting);
+    }
+
+    return meeting;
   }
 
   public List<Meeting> getFutureMeetingList(Contact contact) {
@@ -134,6 +140,22 @@ public class ContactManagerImpl implements ContactManager {
       throw new IllegalArgumentException("Attempting to retrieve non-existent contact");
     }
     return contact;
+  }
+
+  private PastMeeting convertMeetingToPast(Meeting meeting) {
+    /*
+      TO DO: convert meeting instance to PastMeeting
+     */
+    return (PastMeeting) meeting;
+  }
+
+  /**
+   * Tests a Meeting instance to check if the date is in the past.
+   *
+   * @param  meeting Meeting to test
+   */
+  private boolean isMeetingPast(Meeting meeting) {
+    return this.isDatePast(meeting.getDate());
   }
 
   /**
