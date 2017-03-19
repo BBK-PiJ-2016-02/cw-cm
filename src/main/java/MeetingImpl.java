@@ -8,7 +8,7 @@ import java.util.Set;
 import spec.Contact;
 import spec.Meeting;
 
-public class MeetingImpl implements Meeting {
+public abstract class MeetingImpl implements Meeting {
 
   private int id;
   private Calendar date;
@@ -20,10 +20,10 @@ public class MeetingImpl implements Meeting {
    * @param  id    ID of the meeting
    * @param  date  Date of the meeting
    */
-  public MeetingImpl(int id, Calendar date) {
+  public MeetingImpl(int id, Set<Contact> contacts, Calendar date) {
     this.setId(id);
     this.date = date;
-    this.contacts = new LinkedHashSet<>();
+    this.contacts = contacts;
   }
 
   public Set<Contact> getContacts() {

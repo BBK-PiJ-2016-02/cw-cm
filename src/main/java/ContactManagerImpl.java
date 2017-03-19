@@ -1,8 +1,9 @@
 package impl;
 
 import impl.ContactImpl;
-
+import impl.MeetingImpl;
 import java.lang.IllegalArgumentException;
+import java.lang.IllegalStateException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -27,7 +28,15 @@ public class ContactManagerImpl implements ContactManager {
   }
 
   public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
-    return 1;
+    if (this.isDatePast(date))   {
+      throw new IllegalArgumentException("Meeting must take place in the future");
+    }
+
+    FutureMeeting meeting = new FutureMeetingImpl(nextMeetingId, contacts, date);
+    meetings.put(nextMeetingId, meeting);
+    nextMeetingId++;
+
+    return meeting.getId();
   }
 
   public PastMeeting getPastMeeting(int id) {
@@ -62,8 +71,16 @@ public class ContactManagerImpl implements ContactManager {
     return null;
   }
 
-  public int addNewPastMeeting(Set<Contact> contacts, Calendar date, String text) {
-    return 1;
+  public int addNewPastMeeting(Set<Contact> contacts, Calendar date, String notes) {
+    if (!this.isDatePast(date))   {
+      throw new IllegalArgumentException("Meeting must take place in the past");
+    }
+
+    PastMeeting meeting = new PastMeetingImpl(nextMeetingId, contacts, date, notes);
+    meetings.put(nextMeetingId, meeting);
+    nextMeetingId++;
+
+    return meeting.getId();
   }
 
   public PastMeeting addMeetingNotes(int id, String text) {
@@ -117,6 +134,16 @@ public class ContactManagerImpl implements ContactManager {
       throw new IllegalArgumentException("Attempting to retrieve non-existent contact");
     }
     return contact;
+  }
+
+  /**
+   * Tests a Calendar instance to check if the date is in the past.
+   *
+   * @param  date Date to test against
+   */
+  private boolean isDatePast(Calendar date) {
+    Calendar now = Calendar.getInstance();
+    return now.getTimeInMillis() > date.getTimeInMillis();
   }
 
 }
