@@ -187,6 +187,25 @@ public class ContactManagerTest {
     assertTrue(meeting instanceof PastMeeting);
   }
 
+  @Test
+  public void testAddingNotesToExistingPastAppointment() {
+    ContactManager contactManager = new ContactManagerImpl();
+    int contactId = contactManager.addNewContact("John", "A note about John");
+    Set<Contact> contacts = contactManager.getContacts(contactId);
+    Calendar date = Calendar.getInstance();
+    date.setTimeInMillis(date.getTimeInMillis() - 1000);
+    int meetingId = contactManager.addNewPastMeeting(contacts, date, "");
+
+    PastMeeting meeting = contactManager.getPastMeeting(meetingId);
+    assertEquals("", meeting.getNotes());
+
+    meeting = contactManager.addMeetingNotes(meetingId, "Productive meeting");
+    assertEquals("Productive meeting", meeting.getNotes());
+
+    meeting = contactManager.addMeetingNotes(meetingId, "Should arrange follow up discussion");
+    assertEquals("Productive meeting, Should arrange follow up discussion", meeting.getNotes());
+  }
+
   private List<Integer> generateTestContacts(ContactManager contactManager) {
     String[] names = new String[] { "Jerry", "Kelly", "Thomas", "Laura" };
     List<Integer> contactIds = new ArrayList<Integer>();
