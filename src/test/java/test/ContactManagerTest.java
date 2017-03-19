@@ -2,10 +2,12 @@ package test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import impl.ContactImpl;
 import impl.ContactManagerImpl;
 import java.lang.IllegalArgumentException;
 import java.lang.Thread;
@@ -200,6 +202,66 @@ public class ContactManagerTest {
 
     meeting = contactManager.addMeetingNotes(meetingId, "Should arrange follow up discussion");
     assertEquals("Productive meeting, Should arrange follow up discussion", meeting.getNotes());
+  }
+
+  @Test
+  public void testGetFutureMeetingList() {
+    int contactId = createTestContact("John");
+    Set<Contact> contacts = contactManager.getContacts(contactId);
+    Contact contact = (Contact) Array.get(contacts.toArray(), 0);
+
+    List<Meeting> meetings = contactManager.getFutureMeetingList(contact);
+    assertNull(meetings);
+
+    contactManager.addFutureMeeting(contacts, dateFuture);
+    meetings = contactManager.getFutureMeetingList(contact);
+    assertNotNull(meetings);
+    assertEquals(1, meetings.size());
+
+    Contact outsideContact = new ContactImpl(123, "Nate", "");
+    try {
+      contactManager.getFutureMeetingList(outsideContact);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertEquals(e.getMessage(), "Contact doesn't exist in manager");
+    }
+  }
+
+  @Test
+  public void testGetMeetingListOn() {
+    int contactId = createTestContact("John");
+    Set<Contact> contacts = contactManager.getContacts(contactId);
+    Contact contact = (Contact) Array.get(contacts.toArray(), 0);
+
+    List<Meeting> meetings = contactManager.getMeetingListOn(dateFuture);
+    assertNull(meetings);
+
+    contactManager.addFutureMeeting(contacts, dateFuture);
+    meetings = contactManager.getMeetingListOn(dateFuture);
+    assertEquals(1, meetings.size());
+  }
+
+  @Test
+  public void testGetPastMeetingListFor() {
+    int contactId = createTestContact("John");
+    Set<Contact> contacts = contactManager.getContacts(contactId);
+    Contact contact = (Contact) Array.get(contacts.toArray(), 0);
+
+    List<PastMeeting> meetings = contactManager.getPastMeetingListFor(contact);
+    assertNull(meetings);
+
+    contactManager.addNewPastMeeting(contacts, datePast, "");
+    meetings = contactManager.getPastMeetingListFor(contact);
+    assertNotNull(meetings);
+    assertEquals(1, meetings.size());
+
+    Contact outsideContact = new ContactImpl(123, "Nate", "");
+    try {
+      contactManager.getPastMeetingListFor(outsideContact);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertEquals(e.getMessage(), "Contact doesn't exist in manager");
+    }
   }
 
   private int createTestContact(String name) {
