@@ -5,6 +5,7 @@ import impl.MeetingImpl;
 import java.lang.IllegalArgumentException;
 import java.lang.IllegalStateException;
 import java.lang.NullPointerException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -84,7 +85,15 @@ public class ContactManagerImpl implements ContactManager {
   }
 
   public List<Meeting> getMeetingListOn(Calendar date) {
-    return null;
+    List<Meeting> meetings = new ArrayList<>();
+    SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+
+    for (Meeting meeting : this.meetings.values()) {
+      if(fmt.format(date.getTime()).equals(fmt.format(meeting.getDate().getTime()))) {
+        meetings.add(meeting);
+      }
+    }
+    return meetings;
   }
 
   public List<PastMeeting> getPastMeetingListFor(Contact contact) {
