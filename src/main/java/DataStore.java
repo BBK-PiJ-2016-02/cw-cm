@@ -66,12 +66,15 @@ public class DataStore implements Serializable {
       }
 
       try {
-        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(dataFile));
+        FileInputStream fileStream = new FileInputStream(dataFile);
+        ObjectInputStream inputStream = new ObjectInputStream(fileStream);
         DataStore data = (DataStore) inputStream.readObject();
         contacts = data.getContacts();
         meetings = data.getMeetings();
         nextContactId = data.getNextContactId();
         nextMeetingId = data.getNextMeetingId();
+        inputStream.close();
+        fileStream.close();
       } catch (ClassNotFoundException | IOException e) {
         // Do nothing, potentially first use.
       }
@@ -83,8 +86,11 @@ public class DataStore implements Serializable {
       }
 
       try {
-        ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream(dataFile));
+        FileOutputStream fileStream = new FileOutputStream(dataFile);
+        ObjectOutputStream outStream = new ObjectOutputStream(fileStream);
         outStream.writeObject(this);
+        outStream.close();
+        fileStream.close();
       } catch (IOException e) {
         e.printStackTrace();
       }
