@@ -8,7 +8,7 @@ public class ContactImpl implements Contact {
 
   private int id;
   private String name;
-  private String notes;
+  private String notes = "";
 
   /**
    * ContactImpl constructor.
@@ -41,7 +41,10 @@ public class ContactImpl implements Contact {
   }
 
   public void addNotes(String note) {
-    notes = notes + note;
+    if (!notes.isEmpty()) {
+      notes += ", ";
+    }
+    notes += note;
   }
 
   /**
