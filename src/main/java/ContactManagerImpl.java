@@ -69,6 +69,10 @@ public class ContactManagerImpl implements ContactManager {
   }
 
   public List<Meeting> getFutureMeetingList(Contact contact) {
+    if (!this.contacts.containsValue(contact)) {
+      throw new IllegalArgumentException("Contact doesn't exist in manager");
+    }
+
     List<Meeting> meetings = new ArrayList<>();
     for (Meeting meeting : this.meetings.values()) {
       Set<Contact> contacts = meeting.getContacts();
