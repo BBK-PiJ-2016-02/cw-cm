@@ -76,9 +76,11 @@ public class ContactManagerImpl implements ContactManager {
 
     List<Meeting> meetings = new ArrayList<>();
     for (Meeting meeting : this.meetings.values()) {
-      Set<Contact> contacts = meeting.getContacts();
-      if (contacts.contains(contact)) {
-        meetings.add(meeting);
+      if(!this.isMeetingPast(meeting)) {
+        Set<Contact> contacts = meeting.getContacts();
+        if (contacts.contains(contact)) {
+          meetings.add(meeting);
+        }
       }
     }
     return meetings;
