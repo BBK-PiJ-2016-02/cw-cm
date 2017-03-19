@@ -15,6 +15,7 @@ import java.util.Set;
 import org.junit.Test;
 import spec.Contact;
 import spec.ContactManager;
+import spec.FutureMeeting;
 import spec.Meeting;
 
 public class ContactManagerTest {
@@ -95,13 +96,60 @@ public class ContactManagerTest {
     ContactManager contactManager = new ContactManagerImpl();
     int contactId = contactManager.addNewContact("John", "A note about John");
     Set<Contact> contacts = contactManager.getContacts(contactId);
-    Calendar calendar = new GregorianCalendar(2020, 0, 1, 9, 00);
+    Calendar date = new GregorianCalendar(2050, 0, 1, 9, 00);
 
-    int meetingId = contactManager.addFutureMeeting(contacts, calendar);
+    int meetingId = contactManager.addFutureMeeting(contacts, date);
     Meeting meeting = contactManager.getMeeting(meetingId);
     assertEquals(meetingId, meeting.getId());
 
-    assertNull(contactManager.getMeeting(10));
+    assertNull("Non-existent meeting IDs should return null", contactManager.getMeeting(10));
+  }
+
+  @Test
+  public void testAddingFutureMeeting() {
+    ContactManager contactManager = new ContactManagerImpl();
+    int contactId = contactManager.addNewContact("John", "A note about John");
+    Set<Contact> contacts = contactManager.getContacts(contactId);
+    Calendar futureDate = new GregorianCalendar(2050, 0, 1, 9, 00);
+
+    int meetingId = contactManager.addFutureMeeting(contacts, futureDate);
+    Meeting meeting = contactManager.getFutureMeeting(meetingId);
+    assertEquals(meetingId, meeting.getId());
+
+    Calendar pastDate = new GregorianCalendar(1990, 0, 1, 9, 00);
+    try {
+      contactManager.addFutureMeeting(contacts, pastDate);
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertEquals(e.getMessage(), "Meeting must take place in the future");
+    }
+  }
+
+  @Test
+  public void testAddingPastMeeting() {
+    ContactManager contactManager = new ContactManagerImpl();
+    int contactId = contactManager.addNewContact("John", "A note about John");
+    Set<Contact> contacts = contactManager.getContacts(contactId);
+    Calendar pastDate = new GregorianCalendar(1990, 0, 1, 9, 00);
+
+    int meetingId = contactManager.addNewPastMeeting(contacts, pastDate, "");
+    Meeting meeting = contactManager.getPastMeeting(meetingId);
+    assertEquals(meetingId, meeting.getId());
+
+    Calendar futureDate = new GregorianCalendar(2050, 0, 1, 9, 00);
+    try {
+      contactManager.addNewPastMeeting(contacts, futureDate, "");
+      fail();
+    } catch (IllegalArgumentException e) {
+      assertEquals(e.getMessage(), "Meeting must take place in the past");
+    }
+  }
+
+  public void testRetrievingNonExistentMeeting() {
+    ContactManager contactManager = new ContactManagerImpl();
+    assertNull(contactManager.getMeeting(9999));
+    assertNull(contactManager.getPastMeeting(9999));
+    assertNull(contactManager.getFutureMeeting(9999));
   }
 
   private List<Integer> generateTestContacts(ContactManager contactManager) {
