@@ -4,6 +4,7 @@ import impl.ContactImpl;
 import impl.MeetingImpl;
 import java.lang.IllegalArgumentException;
 import java.lang.IllegalStateException;
+import java.lang.NullPointerException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -59,7 +60,7 @@ public class ContactManagerImpl implements ContactManager {
     Meeting meeting = this.meetings.get(id);
 
     if(meeting instanceof FutureMeeting && this.isMeetingPast(meeting)) {
-      meeting = this.convertMeetingToPast(meeting);
+      meeting = this.convertMeetingToPast(meeting, "");
       meetings.put(meeting.getId(), meeting);
     }
 
@@ -90,8 +91,20 @@ public class ContactManagerImpl implements ContactManager {
     return meeting.getId();
   }
 
-  public PastMeeting addMeetingNotes(int id, String text) {
-    return null;
+  public PastMeeting addMeetingNotes(int id, String notes) {
+    if(notes == null) {
+      throw new NullPointerException("Notes cannot be null");
+    }
+
+    PastMeeting meeting = this.getPastMeeting(id);
+    if(!meeting.getNotes().isEmpty()) {
+      notes = meeting.getNotes() + ", " + notes;
+    }
+
+    meeting = this.convertMeetingToPast(meeting, notes);
+    meetings.put(meeting.getId(), meeting);
+
+    return meeting;
   }
 
   public int addNewContact(String name, String notes) {
@@ -148,16 +161,8 @@ public class ContactManagerImpl implements ContactManager {
    *
    * @param  meeting Meeting instance to be used a source date
    */
-  private PastMeeting convertMeetingToPast(Meeting meeting) {
-
-    PastMeeting pastMeeting = new PastMeetingImpl(
-      meeting.getId(),
-      meeting.getContacts(),
-      meeting.getDate(),
-      ""
-    );
-
-    return pastMeeting;
+  private PastMeeting convertMeetingToPast(Meeting meeting, String notes) {
+    return new PastMeetingImpl(meeting.getId(), meeting.getContacts(), meeting.getDate(), notes);
   }
 
   /**
