@@ -31,11 +31,19 @@ public class ContactManagerImpl implements ContactManager {
   }
 
   public PastMeeting getPastMeeting(int id) {
-    return null;
+    Meeting meeting = this.getMeeting(id);
+    if (meeting != null && !(meeting instanceof PastMeeting)) {
+      throw new IllegalStateException("Requested meeting is the future");
+    }
+    return (PastMeeting) meeting;
   }
 
   public FutureMeeting getFutureMeeting(int id) {
-    return null;
+    Meeting meeting = this.getMeeting(id);
+    if (meeting != null && !(meeting instanceof FutureMeeting)) {
+      throw new IllegalStateException("Requested meeting is the past");
+    }
+    return (FutureMeeting) meeting;
   }
 
   public Meeting getMeeting(int id) {
