@@ -99,7 +99,20 @@ public class ContactManagerImpl implements ContactManager {
   }
 
   public List<PastMeeting> getPastMeetingListFor(Contact contact) {
-    return null;
+    if (!this.contacts.containsValue(contact)) {
+      throw new IllegalArgumentException("Contact doesn't exist in manager");
+    }
+
+    List<PastMeeting> meetings = new ArrayList<>();
+    for (Meeting meeting : this.meetings.values()) {
+      if(this.isMeetingPast(meeting)) {
+        Set<Contact> contacts = meeting.getContacts();
+        if (contacts.contains(contact)) {
+          meetings.add((PastMeeting) meeting);
+        }
+      }
+    }
+    return meetings;
   }
 
   public int addNewPastMeeting(Set<Contact> contacts, Calendar date, String notes) {
