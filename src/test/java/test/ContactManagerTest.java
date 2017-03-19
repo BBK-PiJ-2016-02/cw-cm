@@ -1,6 +1,7 @@
 package test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import impl.ContactManagerImpl;
 import java.lang.IllegalArgumentException;
@@ -66,6 +67,7 @@ public class ContactManagerTest {
 
     try {
       contactManager.getContacts(contactId1, 999, 1230);
+      fail();
     } catch (IllegalArgumentException e) {
       assertEquals(e.getMessage(), "Attempting to retrieve non-existent contact(s)");
     }
