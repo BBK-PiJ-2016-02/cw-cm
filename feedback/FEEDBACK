@@ -1,1 +1,20 @@
 
+Please look at the general comments to see if any apply.
+
+Why have you put the specification in a package and not 
+your implementation? Please be consistent.
+
+Testing should have been more extensive.
+
+Add javadoc even for private fields.
+
+Perhaps add a throws clause when throwing an exception even if it 
+isn't strictly required (good documentation).
+
+Going forward consider Java 8 constructs.
+
+Not quite sure why you needed the DataStore?
+Do you mean to expose that to the client?
+
+Good attempt - Merit.
+
